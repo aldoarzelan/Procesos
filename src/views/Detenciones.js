@@ -1,22 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import React, { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 //import TextField from '@material-ui/core/TextField';
-import 'date-fns';
+import "date-fns";
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker
-} from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
-import Grid from '@material-ui/core/Grid';
+  KeyboardTimePicker,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import Grid from "@material-ui/core/Grid";
 //import Button from '@material-ui/core/Button';
-import axios from 'axios';
-
-
+import axios from "axios";
 
 import {
   Button,
@@ -46,19 +44,19 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   root: {
-    '& > *': {
+    "& > *": {
       margin: theme.spacing(1),
-      width: '25ch',
+      width: "25ch",
     },
   },
 }));
 
 export default function SimpleSelect() {
   const classes = useStyles();
-  const [Equipo, setEquipo] = React.useState('');
-  const [MotDet, setMotDet] = React.useState('');
-  const [Tag, setTag] = React.useState('');
-  const [Imputacion, setImputacion] = React.useState('');
+  const [Equipo, setEquipo] = React.useState("");
+  const [MotDet, setMotDet] = React.useState("");
+  const [Tag, setTag] = React.useState("");
+  const [Imputacion, setImputacion] = React.useState("");
 
   const [idMotivos, setIdMotivos] = useState(-1);
 
@@ -86,14 +84,15 @@ export default function SimpleSelect() {
     setImputacion(event.target.value);
   };
 
-  const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [selectedDate, setSelectedDate] = React.useState(
+    new Date("2014-08-18T21:11:54")
+  );
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  const [motivos, setMotivos] = useState([])
-
+  const [motivos, setMotivos] = useState([]);
 
   console.log("Motivos lenght fuera " + motivos.length);
 
@@ -118,18 +117,28 @@ export default function SimpleSelect() {
   //   }
   // }, [motivos])
 
-  const [url, setUrl] = useState('https://localhost:5001/api/motivo');
-  const [respuestaAPI, setRespuestaAPI] = useState({ respuesta: 'KO' });
-
+  const url = "https://localhost:5001/api/motivo";
+  const [respuestaAPI, setRespuestaAPI] = useState({ respuesta: "KO" });
 
   useEffect(() => {
-    const consultaAPI = async () => {
-      const consulta = await axios({ url });
-
-      setRespuestaAPI(consulta);
-    };
-
-    consultaAPI();
+    axios
+      .get({
+        baseURL: url,
+        withCredentials: false,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        },
+      })
+      .then((response) => {
+        debugger;
+        setRespuestaAPI(response.data);
+      })
+      .catch((error) => {
+        debugger;
+        console.log("SimpleSelect -> error", error);
+        setRespuestaAPI(error);
+      });
   });
 
   // if (motivos.length === 0) {
@@ -139,7 +148,6 @@ export default function SimpleSelect() {
   // }
 
   return (
-
     <div className="content">
       <Row>
         <Col xs="12">
@@ -184,7 +192,7 @@ export default function SimpleSelect() {
                         value={selectedDate}
                         onChange={handleDateChange}
                         KeyboardButtonProps={{
-                          'aria-label': 'change time',
+                          "aria-label": "change time",
                         }}
                       />
                     </Grid>
@@ -200,7 +208,7 @@ export default function SimpleSelect() {
                         value={selectedDate}
                         onChange={handleDateChange}
                         KeyboardButtonProps={{
-                          'aria-label': 'change time',
+                          "aria-label": "change time",
                         }}
                       />
                     </Grid>
@@ -221,19 +229,22 @@ export default function SimpleSelect() {
                         <em>None</em>
                       </MenuItem>
 
-                      {motivos ?
-                        motivos.map((motivos, idx) => (
-                          <MenuItem key={motivos.id} value={idx}>{motivos.descripcion}</MenuItem>
-
-                        )) : null
-                      }
+                      {motivos
+                        ? motivos.map((motivos, idx) => (
+                            <MenuItem key={motivos.id} value={idx}>
+                              {motivos.descripcion}
+                            </MenuItem>
+                          ))
+                        : null}
                     </Select>
                     <FormHelperText>Motivo</FormHelperText>
                   </FormControl>
                 </Col>
                 <Col sm="4">
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-helper-label">Motivo Detalle</InputLabel>
+                    <InputLabel id="demo-simple-select-helper-label">
+                      Motivo Detalle
+                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-helper-label"
                       id="demo-simple-select-helper"
@@ -246,17 +257,23 @@ export default function SimpleSelect() {
                       <MenuItem value={1}>O1_Falla_de_cinta</MenuItem>
                       <MenuItem value={2}>02__Demora_de_camión</MenuItem>
                       <MenuItem value={3}>03__Limpieza_de_frente</MenuItem>
-                      <MenuItem value={4}>04__Problema_en_equipo_de_carga</MenuItem>
+                      <MenuItem value={4}>
+                        04__Problema_en_equipo_de_carga
+                      </MenuItem>
                       <MenuItem value={5}>05__Emergencia</MenuItem>
                       <MenuItem value={6}>06__Frente_de_carga_angosto</MenuItem>
-                      <MenuItem value={7}>07__Reubicación_de_equipos_de_carga</MenuItem>
+                      <MenuItem value={7}>
+                        07__Reubicación_de_equipos_de_carga
+                      </MenuItem>
                     </Select>
                     <FormHelperText>Motivo Detalle</FormHelperText>
                   </FormControl>
                 </Col>
                 <Col sm="4">
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-helper-label">Tag</InputLabel>
+                    <InputLabel id="demo-simple-select-helper-label">
+                      Tag
+                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-helper-label"
                       id="demo-simple-select-helper"
@@ -281,7 +298,9 @@ export default function SimpleSelect() {
               <Row>
                 <Col sm="4">
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-helper-label">Imputacion</InputLabel>
+                    <InputLabel id="demo-simple-select-helper-label">
+                      Imputacion
+                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-helper-label"
                       id="demo-simple-select-helper"

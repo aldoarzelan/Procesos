@@ -139,7 +139,7 @@ export default function SimpleSelect() {
         console.log("SimpleSelect -> error", error);
         setRespuestaAPI(error);
       });
-  });
+  }, []);
 
   // if (motivos.length === 0) {
   //   motivos.map((motivos, idx) => (
